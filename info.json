@@ -1,9 +1,9 @@
 {
-  "name": "BurnerLeech A16 Fix",
-  "version": "0.17.3",
+  "name": "BurnerLeech",
+  "version": "1.0.0",
   "title": "BurnerLeech",
-  "author": "Klonan, EnigmaticAussie",
-  "dependencies": ["burner-fuel-bonus"],
+  "author": "EnigmaticAussie, Klonan",
+  "dependencies": ["?burner-fuel-bonus", "?BurnerLeech A16 Fix = 0.17.3"],
   "contact": "",
   "homepage": "",
   "description": "Burner Inserters can take fuel from any entity (ie. furnaces)",

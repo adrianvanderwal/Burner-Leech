@@ -29,20 +29,24 @@ local function position_to_tile_position(position)
     return {x, y}
 end
 
-local function on_built(event)
-    if (event.created_entity.type == 'inserter' and event.created_entity.burner) then
-        local burner = event.created_entity
+local function add_burner(burner)
+    if (burner.type == 'inserter' and burner.burner) then
         --log(burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
         table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
-        if global.burner_index == nil then
-        --global.burner_index = next(global.burners)
-        end
-    --log(serpent.block(global.burners))
     end
+end
+
+local function on_built(event)
+    add_burner(event.created_entity)
+end
+
+local function on_cloned(event)
+    add_burner(event.destination)
 end
 
 script.on_event(defines.events.on_built_entity, on_built)
 script.on_event(defines.events.on_robot_built_entity, on_built)
+script.on_event(defines.events.on_entity_cloned, on_cloned)
 
 --- check_burner
 function check_burner()
@@ -63,10 +67,15 @@ function check_burner()
                 -- check to see if there is a different burner inserter at that position - use that, else remove the reference
                 local position = data.position
                 local surface = data.surface
+                -- check if surface still exists, with warptorio mod surfaces get removed after a warp
+                if not surface.valid then
+                    global.burners[global.burner_index] = nil
+                    global.burner_index = nil
+                    return
+                end
                 bc = surface.find_entities_filtered({position = data.position, force = data.force, surface = surface, limit = 1})
                 if next(bc) == nil then
                     -- NOTHING WAS FOUND
-                    --log('burner invalid, removing')
                     global.burners[global.burner_index] = nil
                     global.burner_index = nil
                     return

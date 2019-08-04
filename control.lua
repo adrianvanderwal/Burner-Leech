@@ -29,15 +29,10 @@ local function position_to_tile_position(position)
     return {x, y}
 end
 
-local function add_burner(added_entity)
-    if (added_entity.type == 'inserter' and added_entity.burner) then
-        local burner = added_entity
+local function add_burner(burner)
+    if (burner.type == 'inserter' and burner.burner) then
         --log(burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
         table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
-        if global.burner_index == nil then
-        --global.burner_index = next(global.burners)
-        end
-        --log(serpent.block(global.burners))
     end
 end
 
@@ -74,7 +69,6 @@ function check_burner()
                 local surface = data.surface
                 -- check if surface still exists, with warptorio mod surfaces get removed after a warp
                 if not surface.valid then
-                    --log('surface invalid, removing')
                     global.burners[global.burner_index] = nil
                     global.burner_index = nil
                     return
@@ -82,7 +76,6 @@ function check_burner()
                 bc = surface.find_entities_filtered({position = data.position, force = data.force, surface = surface, limit = 1})
                 if next(bc) == nil then
                     -- NOTHING WAS FOUND
-                    --log('burner invalid, removing')
                     global.burners[global.burner_index] = nil
                     global.burner_index = nil
                     return

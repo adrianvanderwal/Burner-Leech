@@ -60,8 +60,15 @@ function check_burner()
         local burner = data.entity
         if burner then
             if burner.valid then
-                --log(burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
-                leech(burner)
+                if (burner.type == 'inserter' and burner.burner) then
+                    --log(burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
+                    leech(burner)
+                else
+                    -- somehow a non-burner inserter is in the list - remove it
+                    global.burners[global.burner_index] = nil
+                    global.burner_index = nil
+                    return
+                end
             else
                 -- burner has been removed
                 -- check to see if there is a different burner inserter at that position - use that, else remove the reference

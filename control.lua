@@ -2,12 +2,9 @@ function init_globals()
     -- [re]build the list of burner/inserter entities
     global.burners = {}
     for _, surface in pairs(game.surfaces) do
-        for _, entity in ipairs(surface.find_entities()) do
-            if entity.force.name ~= 'neutral' then
-                if (entity.type == 'inserter' and entity.burner) then
-                    local burner = entity
-                    table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
-                end
+        for _, enburnertity in ipairs(surface.find_entities_filtered(type == 'inerter')) do
+            if burner.burner then
+                table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
             end
         end
     end
@@ -44,9 +41,14 @@ local function on_cloned(event)
     add_burner(event.destination)
 end
 
+local function on_script_raised_built(event)
+    add_burner(event.entity)
+end
+
 script.on_event(defines.events.on_built_entity, on_built)
 script.on_event(defines.events.on_robot_built_entity, on_built)
 script.on_event(defines.events.on_entity_cloned, on_cloned)
+script.on_event(defines.script_raised_built, on_script_raised_built)
 
 --- check_burner
 function check_burner()
@@ -80,7 +82,7 @@ function check_burner()
                     global.burner_index = nil
                     return
                 end
-                bc = surface.find_entities_filtered({position = data.position, force = data.force, surface = surface, limit = 1})
+                bc = surface.find_entities_filtered({position = data.position, force = data.force, surface = surface, type = 'inserter', limit = 1})
                 if next(bc) == nil then
                     -- NOTHING WAS FOUND
                     global.burners[global.burner_index] = nil
@@ -164,7 +166,6 @@ function leech(burner)
     --log(drop_target.name .. ' @ ' .. drop_target.position.x .. ', ' .. drop_target.position.y .. ' requires refuelling')
 
     if burner.held_stack.valid_for_read == false then
-        log('valid_for_read = false')
         for _, fuel in pairs(global.fuel_list) do
             if pickup_target.get_item_count(fuel) > 0 then
                 burner.held_stack.set_stack({name = fuel, count = 1})

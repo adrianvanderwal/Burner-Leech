@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 2019-08-06
+  Bugfixes:
+    - Added another check when searching for changed inserters
+  Changes:
+    - Optimized initialisation
+    - Reduced log SPAM
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2019-08-04
+  Bugfixes:
+    - Added extra check for inserters at leeching time
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2019-08-04
   Changes:

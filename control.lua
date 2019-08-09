@@ -83,7 +83,7 @@ function check_burner()
                     return
                 end
                 bc = surface.find_entities_filtered({position = data.position, force = data.force, surface = surface, type = 'inserter', limit = 1})
-                if next(bc) == nil then
+                if (next(bc) == nil) or (not bc.burner) then
                     -- NOTHING WAS FOUND
                     global.burners[global.burner_index] = nil
                     global.burner_index = nil

@@ -2,7 +2,7 @@ function init_globals()
     -- [re]build the list of burner/inserter entities
     global.burners = {}
     for _, surface in pairs(game.surfaces) do
-        for _, burner in ipairs(surface.find_entities_filtered({type == 'inerter'})) do
+        for _, burner in ipairs(surface.find_entities_filtered({type = 'inserter'})) do
             if burner.burner then
                 table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
             end

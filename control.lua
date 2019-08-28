@@ -131,8 +131,8 @@ function leech(burner)
     --log('pickup_target = ' .. pickup_target.name .. ' @ ' .. pickup_target.position.x .. ', ' .. pickup_target.position.y)
 
     -- find and set drop_target
-    -- if self fuel count < 1 fuel self before fueling others
-    if burner.get_fuel_inventory().get_item_count() < 1 then
+    -- if self fuel count < 5 fuel self before fueling others
+    if burner.get_fuel_inventory().get_item_count() < 5 then
         drop_target = burner
     else
         --log('finding possible drop_target')
@@ -156,7 +156,7 @@ function leech(burner)
     end
 
     if drop_target.get_fuel_inventory() ~= nil then
-        if drop_target.get_fuel_inventory().get_item_count() < 1 then
+        if drop_target.get_fuel_inventory().get_item_count() < 5 then
             send_to_target = true
         else
             return

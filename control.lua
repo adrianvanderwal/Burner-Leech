@@ -28,7 +28,6 @@ end
 
 local function add_burner(burner)
     if (burner.type == 'inserter' and burner.burner) then
-        --log(burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
         table.insert(global.burners, {entity = burner, position = burner.position, force = burner.force, surface = burner.surface})
     end
 end
@@ -101,7 +100,6 @@ end
 --- leech(burner)
 -- checks to see if the burner inserter can/should leech fuel from the entity at it's pickup position
 function leech(burner)
-    --log('Testing leech options for ' .. burner.name .. ' @ ' .. burner.position.x .. ', ' .. burner.position.y)
     local surface, force, position = burner.surface, burner.force, burner.position
 
     local pickup_target, take_from_pickup_target_inventory = nil, false
@@ -109,11 +107,8 @@ function leech(burner)
 
     -- find and set pickup_target
     if burner.pickup_target == nil then
-        --log('finding possible pickup_target')
-        --log(serpent.block(position_to_tile_position(burner.pickup_position)))
         pt = surface.find_entities_filtered({position = position_to_tile_position(burner.pickup_position), force = burner.force, surface = burner.surface, limit = 1})
         if pt[1] ~= nil then
-            --log('pickup_target = ' .. pt[1].name .. ' @ ' .. pt[1].position.x .. ', ' .. pt[1].position.y)
             if pt[1].get_fuel_inventory() ~= nil then
                 take_from_pickup_target_inventory = true
                 pickup_target = pt[1]
@@ -124,46 +119,35 @@ function leech(burner)
     end
     -- nothing to pickup from
     if pickup_target == nil then
-        --log('No pickup_target.')
         return
     end
 
-    --log('pickup_target = ' .. pickup_target.name .. ' @ ' .. pickup_target.position.x .. ', ' .. pickup_target.position.y)
-
     -- find and set drop_target
-    -- if self fuel count < 1 fuel self before fueling others
-    if burner.get_fuel_inventory().get_item_count() < 1 then
+    -- if self fuel count < 5 fuel self before fueling others
+    if burner.get_fuel_inventory().get_item_count() < 5 then
         drop_target = burner
     else
-        --log('finding possible drop_target')
-        --log(serpent.block(position_to_tile_position(burner.drop_position)))
         dt = surface.find_entities_filtered({position = position_to_tile_position(burner.drop_position), force = burner.force, surface = burner.surface, limit = 1})
         drop_target = dt[1]
     end
 
     -- nothing to drop to
     if drop_target == nil then
-        --log('No drop_target.')
         return
     end
 
-    --log('drop_target = ' .. drop_target.name .. ' @ ' .. drop_target.position.x .. ', ' .. drop_target.position.y)
-
     -- check drop_target for burner energy source
     if drop_target.burner == nil then
-        --log('drop_target has no burner energy source')
         return
     end
 
     if drop_target.get_fuel_inventory() ~= nil then
-        if drop_target.get_fuel_inventory().get_item_count() < 1 then
+        if drop_target.get_fuel_inventory().get_item_count() < 5 then
             send_to_target = true
         else
             return
         end
     end
-
-    --log(drop_target.name .. ' @ ' .. drop_target.position.x .. ', ' .. drop_target.position.y .. ' requires refuelling')
 
     if burner.held_stack.valid_for_read == false then
         for _, fuel in pairs(global.fuel_list) do

@@ -123,8 +123,8 @@ function leech(burner)
     end
 
     -- find and set drop_target
-    -- if self fuel count < 5 fuel self before fueling others
-    if burner.get_fuel_inventory().get_item_count() < 5 then
+    -- if self fuel count < 1 fuel self before fueling others
+    if burner.get_fuel_inventory().get_item_count() < 1 then
         drop_target = burner
     else
         dt = surface.find_entities_filtered({position = position_to_tile_position(burner.drop_position), force = burner.force, surface = burner.surface, limit = 1})

@@ -1,9 +1,9 @@
 {
   "name": "Burner-Leech",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "title": "Burner Leech",
   "author": "EnigmaticAussie, Klonan",
-  "dependencies": ["?burner-fuel-bonus"],
+  "dependencies": ["base >= 0.17.69","?burner-fuel-bonus"],
   "contact": "",
   "homepage": "",
   "description": "Burner Inserters can take fuel from any entity (ie. furnaces)",

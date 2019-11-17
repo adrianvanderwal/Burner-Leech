@@ -1,8 +1,6 @@
+-- 2.0.1 remove check for electric inserters as they are incompatible with the vanilla method of leeching fuel
 for _, v in pairs(data.raw.inserter) do
-    if settings.startup['bl-allow-non-burners-to-leech'].value == true then
-        -- allow ALL inserters to leech
-        v.allow_burner_leech = true
-    elseif v.energy_source.type == "burner" then
+    if v.energy_source.type == "burner" then
         v.allow_burner_leech = true
     end
 end

@@ -43,12 +43,14 @@ local function add_inserter(entity)
     end
 end
 local function remove_inserter(entity)
-    if (entity.type == "inserter" and entity.burner) then
-        for k, v in pairs(global.burner_inserters) do
-            if v.entity == entity then
-                table.remove(global.burner_inserters, k)
-                global.inserter_index = nil
-                break
+    if isvalid(entity) then
+        if (entity.type == "inserter" and entity.burner) then
+            for k, v in pairs(global.burner_inserters) do
+                if v.entity == entity then
+                    table.remove(global.burner_inserters, k)
+                    global.inserter_index = nil
+                    break
+                end
             end
         end
     end

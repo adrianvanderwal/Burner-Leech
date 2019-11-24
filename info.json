@@ -1,6 +1,6 @@
 {
   "name": "Burner-Leech",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "title": "Burner Leech",
   "author": "EnigmaticAussie, Klonan",
   "dependencies": ["base >= 0.17.69","?burner-fuel-bonus"],

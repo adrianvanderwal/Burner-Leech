@@ -20,7 +20,7 @@ function init_globals()
     global.fuel_list = {}
     for _, proto in pairs(game.item_prototypes) do
         if proto.fuel_value > 0 then
-            table.insert(global.fuel_list, {[proto.name] = proto.stack_size})
+            table.insert(global.fuel_list, {name = proto.name, stack_size = proto.stack_size})
         end
     end
     -- set other global settings
@@ -170,7 +170,7 @@ function leech(inserter)
         return
     end
 
-    log((global.inserter_index or "nil") .. ": " .. inserter.name .. " @ " .. inserter.position.x .. ", " .. inserter.position.y)
+    --log((global.inserter_index or "nil") .. ": " .. inserter.name .. " @ " .. inserter.position.x .. ", " .. inserter.position.y)
 
     -- find and set pickup_target
     if inserter.pickup_target == nil then
@@ -184,29 +184,29 @@ function leech(inserter)
     else
         pickup_target = inserter.pickup_target
     end
-    -- nothing to pickup from
-    if pickup_target == nil or not pickup_target.valid then
-        return
-    end
 
     -- to do:
     -- get fuel stack sizes (limit input based on stack size)
     -- get target fuel type - limit input of fuel based on target fuel
 
     if drop_target.get_fuel_inventory() ~= nil then
-        if drop_target.get_fuel_inventory().get_item_count() < 5 then
+        if drop_target.get_fuel_inventory().get_item_count() < 1 then
             send_to_target = true
         else
             return
         end
     end
-
-    if inserter.held_stack.valid_for_read == false then
-        for _, fuel in pairs(global.fuel_list) do
-            if pickup_target.get_item_count(fuel) > 0 then
-                inserter.held_stack.set_stack({name = fuel, count = 1})
-                pickup_target.remove_item({name = fuel, count = 1})
-                return true
+    -- nothing to pickup from
+    if pickup_target == nil or not pickup_target.valid then
+        return
+    else
+        if inserter.held_stack.valid_for_read == false then
+            for _, fuel in pairs(global.fuel_list) do
+                if pickup_target.get_item_count(fuel.name) > 0 then
+                    inserter.held_stack.set_stack({name = fuel.name, count = 1})
+                    pickup_target.remove_item({name = fuel.name, count = 1})
+                    return true
+                end
             end
         end
     end

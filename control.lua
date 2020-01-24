@@ -20,9 +20,10 @@ function init_globals()
     global.fuel_list = {}
     for _, proto in pairs(game.item_prototypes) do
         if proto.fuel_value > 0 then
-            table.insert(global.fuel_list, {name = proto.name, stack_size = proto.stack_size})
+            global.fuel_list[proto.name] = proto.stack_size
         end
     end
+    log(serpent.block(global.fuel_list))
     -- set other global settings
     global.number_of_inserter_to_process = 100
     global.cleaning_burner_inserters = false
@@ -181,7 +182,11 @@ function leech(inserter)
             if pt[1].get_fuel_inventory() ~= nil then
                 take_from_pickup_target_inventory = true
                 pickup_target = pt[1]
+            else
+                return
             end
+        else
+            return
         end
     else
         pickup_target = inserter.pickup_target
@@ -190,10 +195,39 @@ function leech(inserter)
     -- to do:
     -- get fuel stack sizes (limit input based on stack size)
     -- get target fuel type - limit input of fuel based on target fuel
+    local fuel_quantity_in_target, fuel_type_in_target = nil, nil
+
+-- VVV shits still broken here
 
     if drop_target.get_fuel_inventory() ~= nil then
-        if drop_target.get_fuel_inventory().get_item_count() < 1 then
-            send_to_target = true
+        -- get quantity of fuel
+        fuel_quantity_in_target = drop_target.get_fuel_inventory().get_item_count()
+        -- if there is already fuel in the target, check to see what it is
+        if fuel_quantity_in_target == nil then
+            return
+        end
+        if fuel_quantity_in_target == 0 then
+            log("fuelqintarge == nil")
+            -- empty - put in any type of fuel
+            if pickup_target == nil or not pickup_target.valid then
+                return
+            else
+                if inserter.held_stack.valid_for_read == false then
+                    fuel_type_in_pickup = next(pickup_target.get_fuel_inventory().get_contents())
+                    if fuel_type_in_pickup == nil then return end
+                    inserter.held_stack.set_stack({name = fuel_type_in_pickup, count = 1})
+                    pickup_target.remove_item({name = fuel_type_in_pickup, count = 1})
+                    return
+                end
+            end
+        elseif fuel_quantity_in_target >= 1 then
+            -- get the fuel type in the target
+            fuel_type_in_target = next(drop_target.get_fuel_inventory().get_contents())
+            -- if stack size == 1 then return
+            if global.fuel_list[fuel_type_in_target] == 1 then
+                return
+            end
+            log(">1")
         else
             return
         end
@@ -204,9 +238,9 @@ function leech(inserter)
     else
         if inserter.held_stack.valid_for_read == false then
             for _, fuel in pairs(global.fuel_list) do
-                if pickup_target.get_item_count(fuel.name) > 0 then
-                    inserter.held_stack.set_stack({name = fuel.name, count = 1})
-                    pickup_target.remove_item({name = fuel.name, count = 1})
+                if pickup_target.get_item_count(fuel_type_in_target) > 0 then
+                    --inserter.held_stack.set_stack({name = fuel_type_in_target, count = 1})
+                    --pickup_target.remove_item({name = fuel_type_in_target, count = 1})
                     return true
                 end
             end

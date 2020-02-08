@@ -1,8 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.3
+Date: 2020-02-08
+  Bugfixes:
+    - Resolved issue when pickup_target had no fuel_inventory (think belts)
+    - Removed debugging log calls; sorry for the SPAM.
+---------------------------------------------------------------------------------------------------
 Version: 2.1.2
 Date: 2020-01-24
   Changes:
-    - Updates to Factorio version 0.18.0
+    - Updated to Factorio version 0.18.0
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.1
 Date: 2019-11-24

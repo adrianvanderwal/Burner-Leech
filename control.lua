@@ -191,13 +191,14 @@ function leech(inserter)
     else
         pickup_target = inserter.pickup_target
     end
-
+    -- if pickup target has no fuel inventory, skip
+    if pickup_target.get_fuel_inventory() == nil then
+        return
+    end
     -- to do:
     -- get fuel stack sizes (limit input based on stack size)
     -- get target fuel type - limit input of fuel based on target fuel
     local fuel_quantity_in_target, fuel_type_in_target = nil, nil
-
--- VVV shits still broken here
 
     if drop_target.get_fuel_inventory() ~= nil then
         -- get quantity of fuel
@@ -207,7 +208,6 @@ function leech(inserter)
             return
         end
         if fuel_quantity_in_target == 0 then
-            log("fuelqintarge == nil")
             -- empty - put in any type of fuel
             if pickup_target == nil or not pickup_target.valid then
                 return
@@ -227,7 +227,6 @@ function leech(inserter)
             if global.fuel_list[fuel_type_in_target] == 1 then
                 return
             end
-            log(">1")
         else
             return
         end
